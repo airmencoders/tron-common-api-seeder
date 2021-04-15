@@ -5,7 +5,7 @@ COPY . .
 RUN printf $'\n\
 set -e\n\  
 if [[ "$RUN_SEEDER" == "true" ]]; then \n\
-    until nc -z -v backend:8088; do\n\
+    until nc -z -v backend:$BACKEND_PORT; do\n\
         >&2 echo "BACKEND is unavailable - sleeping"\n\
         sleep 1\n\
     done\n\  
