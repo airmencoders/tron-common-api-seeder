@@ -3,7 +3,7 @@
  *
  * To use locally, run "npm install" in this directory, and then "node seeder.js", or if you want to
  * run the requests thru a proxy if you have Spring Security enabled, you can use something like the "jwt-cli-utility"
- * and issue the command "PROXY=http://localhost:<proxy-port>/api/v1 node seeder.js".
+ * and issue the command "PROXY=http://localhost:<proxy-port>/api/v2 node seeder.js".
  *
  * This script uses the json-patch content-type for organization updates.
  *
@@ -11,9 +11,10 @@
 'use strict';
 const fetch = require('node-fetch');
 
-let url = process.env.PROXY || 'http://localhost:8088/api/v1';
+let url = process.env.PROXY || 'http://localhost:8088/api/v2';
 
 async function addNewPerson(spec) {
+    console.log("Adding new Person");
     let [rank, firstName, middleName, lastName, email] = spec.split(/\s/);
     let urlString = `${url}/person`;
 
@@ -36,7 +37,7 @@ async function addNewPerson(spec) {
 }
 
 async function addNewOrg(type, name, parentId) {
-
+    console.log("Adding new Org");
     let urlString = `${url}/organization`;
 
     let resp = await fetch(urlString, {
@@ -54,7 +55,7 @@ async function addNewOrg(type, name, parentId) {
 }
 
 async function addMemberOrgs(id, orgs) {
-
+    console.log("Adding member org");
     let patchOp = [];
     for (let org of orgs) {
         patchOp.push({ op: 'add', path: '/subordinateOrganizations/-', value: org })
@@ -75,7 +76,7 @@ async function addMemberOrgs(id, orgs) {
 }
 
 async function addLeader(id, leader) {
-
+    console.log("Adding Leader");
     let resp = await fetch(`${url}/organization/${id}`, {
         method: 'PATCH',
         headers: {
@@ -91,7 +92,7 @@ async function addLeader(id, leader) {
 }
 
 async function addMember(id, member) {
-
+    console.log("Adding Member");
     let patchOp = [];
     patchOp.push({ op: 'add', path: '/members/-', value: member });
 
