@@ -56,17 +56,13 @@ async function addNewOrg(type, name, parentId) {
 
 async function addMemberOrgs(id, orgs) {
     console.log("Adding member org");
-    let patchOp = [];
-    for (let org of orgs) {
-        patchOp.push({ op: 'add', path: '/subordinateOrganizations/-', value: org })
-    }
     
-    let resp = await fetch(`${url}/organization/${id}`, {
+    let resp = await fetch(`${url}/organization/${id}/subordinates`, {
         method: 'PATCH',
         headers: {
-            'content-type': 'application/json-patch+json'
+            'content-type': 'application/json'
         },
-        body: JSON.stringify(patchOp)
+        body: JSON.stringify(orgs)
     });
 
     if (resp.status !== 200) throw new Error("Bad Add Member Org");
@@ -93,15 +89,13 @@ async function addLeader(id, leader) {
 
 async function addMember(id, member) {
     console.log("Adding Member");
-    let patchOp = [];
-    patchOp.push({ op: 'add', path: '/members/-', value: member });
 
-    let resp = await fetch(`${url}/organization/${id}`, {
+    let resp = await fetch(`${url}/organization/${id}/members`, {
         method: 'PATCH',
         headers: {
-            'content-type': 'application/json-patch+json'
+            'content-type': 'application/json'
         },
-        body: JSON.stringify(patchOp)
+        body: JSON.stringify([member])
     });
 
     if (resp.status !== 200) throw new Error("Bad Add Member");
